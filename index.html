@@ -1,96 +1,112 @@
-    <!DOCTYPE html>
-    <html lang="vi">
-    <head>
-        <meta charset="UTF-8">
-        <title>Robot Control</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-            }
-            #main-container {
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                gap: 30px;
-                margin-top: 20px;
-            }
-            #video-section, #fire-section {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            #control-panel {
-                margin-top: 20px;
-            }
-            .arrow-btn {
-                font-size: 32px;
-                padding: 15px 25px;
-                margin: 5px;
-                border: none;
-                border-radius: 8px;
-                background-color: #4CAF50;
-                color: white;
-                cursor: pointer;
-            }
-            .arrow-btn:hover {
-                background-color: #45a049;
-            }
-            #videoFeed, #fireCamFeed {
-                border: 2px solid #333;
-                border-radius: 10px;
-            }
-            #fire-classification {
-                margin-top: 10px;
-                padding: 10px;
-                width: 300px;
-                border: 2px dashed #f44336;
-                border-radius: 10px;
-                font-size: 18px;
-                background-color: #ffe6e6;
-                color: #d32f2f;
-            }
-        </style>
-    </head>
-    <body>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        #video-section, #fire-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #control-panel {
+            margin-top: 20px;
+        }
+        .arrow-btn {
+            font-size: 32px;
+            padding: 15px 25px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .arrow-btn:hover {
+            background-color: #45a049;
+        }
+        #videoFeed, #fireCamFeed {
+            border: 2px solid #333;
+            border-radius: 10px;
+        }
+        #fire-classification {
+            margin-top: 10px;
+            padding: 10px;
+            width: 300px;
+            border: 2px dashed #f44336;
+            border-radius: 10px;
+            font-size: 18px;
+            background-color: #ffe6e6;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
 
-        <h2>Robot Control Panel</h2>
+    <h2>Robot Control Panel</h2>
 
-
-        <div id="main-container">
-
-            <div id="video-section">
-                <h3>Map and Location </h3>
-                <img id="videoFeed" src="/video_feed" width="640" height="480">
-            </div>
-
-            
-            <div id="fire-section">
-                <h3>Fire Detection</h3>
-                <img id="fireCamFeed" src="/fire_feed" width="640" height="480">
-                <div id="fire-classification">Phân loại đám cháy: </div>
-            </div>
+    <div id="main-container">
+        <div id="video-section">
+            <h3>Map and Location</h3>
+            <img id="videoFeed" src="/video_feed" width="640" height="480">
         </div>
 
-        
-        <div id="control-panel">
-            <div>
-                <button class="arrow-btn" onclick="sendCommand('f')">⬆️</button>
-            </div>
-            <div>
-                <button class="arrow-btn" onclick="sendCommand('l')">⬅️</button>
-                <button class="arrow-btn" onclick="sendCommand('s')">⏹️</button>
-                <button class="arrow-btn" onclick="sendCommand('r')">➡️</button>
-            </div>
-            <div>
-                <button class="arrow-btn" onclick="sendCommand('b')">⬇️</button>
-            </div>
-            <br>
-            <button class="arrow-btn" style="background-color: #2196F3;" onclick="sendCommand('a')">🚀 TÌM ĐƯỜNG</button>
-            <button class="arrow-btn" style="background-color: #2196F3;" onclick="sendCommand('auto')">🤖 AUTO FOLLOW</button>
-            <button class="arrow-btn" style="background-color: #2196F3;" onclick="sendCommand('stop_auto')">🚀🛑 STOP AUTO</button>
+        <div id="fire-section">
+            <h3>Fire Detection</h3>
+            <img id="fireCamFeed" src="/fire_feed" width="640" height="480">
+            <div id="fire-classification">Phân loại đám cháy: Đang chờ dữ liệu...</div>
         </div>
+    </div>
 
-        <script src="/static/script.js"></script>
-    </body>
-    </html>
+    <div id="control-panel">
+        <div>
+            <button class="arrow-btn" onclick="sendCommand('f')">⬆️</button>
+        </div>
+        <div>
+            <button class="arrow-btn" onclick="sendCommand('l')">⬅️</button>
+            <button class="arrow-btn" onclick="sendCommand('s')">⏹️</button>
+            <button class="arrow-btn" onclick="sendCommand('r')">➡️</button>
+        </div>
+        <div>
+            <button class="arrow-btn" onclick="sendCommand('b')">⬇️</button>
+        </div>
+        <br>
+        <button class="arrow-btn" style="background-color: #2196F3;" onclick="sendCommand('a')">🚀 TÌM ĐƯỜNG</button>
+        <button class="arrow-btn" style="background-color: #2196F3;" onclick="sendCommand('auto')">🤖 AUTO FOLLOW</button>
+        <button class="arrow-btn" style="background-color: #2196F3;" onclick="sendCommand('stop_auto')">🚀🛑 STOP AUTO</button>
+    </div>
+
+    <script>
+        function sendCommand(cmd) {
+            fetch('/send_command', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ command: cmd })
+            }).then(res => console.log("Gửi lệnh:", cmd));
+        }
+
+        function updateFireResult() {
+            fetch('/fire_result')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('fire-classification').innerText =
+                        " " + data.label;
+                });
+        }
+
+        setInterval(updateFireResult, 1000); // cập nhật mỗi giây
+    </script>
+
+</body>
+</html>
