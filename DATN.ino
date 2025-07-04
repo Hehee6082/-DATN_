@@ -21,10 +21,10 @@ char incomingPacket[255]; // buffer nhận dữ liệu
 #define TURN_SPEED 255
 
 
-#define IR_LEFT       3  // cảm biến trái
-#define IR_RIGHT      4  // cảm biến phải
-#define IR_LEFT_OUTER 2  // cảm biến trái ngoài cùng
-#define IR_RIGHT_OUTER 7 // cảm biến phải ngoài cùng
+#define IR_LEFT       3  
+#define IR_RIGHT      4  
+#define IR_LEFT_OUTER 2  
+#define IR_RIGHT_OUTER 7 
 
 bool autoMode = false;
 
@@ -58,8 +58,8 @@ void setup() {
  
   pinMode(IR_LEFT, INPUT);
   pinMode(IR_RIGHT, INPUT);
-  pinMode(IR_LEFT_OUTER, INPUT);  // Cảm biến trái ngoài cùng
-  pinMode(IR_RIGHT_OUTER, INPUT); // Cảm biến phải ngoài cùng
+  pinMode(IR_LEFT_OUTER, INPUT);  
+  pinMode(IR_RIGHT_OUTER, INPUT);
 
   stopMotors();
 }
