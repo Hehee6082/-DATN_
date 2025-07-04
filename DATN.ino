@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 
-// ====== Cấu hình Wi-Fi ======
+
 const char* ssid = "HLHUST BRO_2.4G";
 const char* password = "12356789";
 
@@ -9,7 +9,7 @@ WiFiUDP udp;
 const int UDP_PORT = 4210;
 char incomingPacket[255]; // buffer nhận dữ liệu
 
-// ====== Cấu hình chân L298N ======
+
 #define IN1 0
 #define IN2 1
 #define IN3 8
@@ -20,7 +20,7 @@ char incomingPacket[255]; // buffer nhận dữ liệu
 #define MOTOR_SPEED 150
 #define TURN_SPEED 255
 
-// ====== Cảm biến IR ======
+
 #define IR_LEFT       3  // cảm biến trái
 #define IR_RIGHT      4  // cảm biến phải
 #define IR_LEFT_OUTER 2  // cảm biến trái ngoài cùng
@@ -28,7 +28,7 @@ char incomingPacket[255]; // buffer nhận dữ liệu
 
 bool autoMode = false;
 
-// ====== SETUP ======
+
 void setup() {
   Serial.begin(115200);
 
@@ -55,7 +55,7 @@ void setup() {
   pinMode(ENA, OUTPUT);
   pinMode(ENB, OUTPUT);
 
-  // Cấu hình cảm biến IR
+ 
   pinMode(IR_LEFT, INPUT);
   pinMode(IR_RIGHT, INPUT);
   pinMode(IR_LEFT_OUTER, INPUT);  // Cảm biến trái ngoài cùng
@@ -64,7 +64,7 @@ void setup() {
   stopMotors();
 }
 
-// ====== LOOP ======
+
 void loop() {
   int packetSize = udp.parsePacket();
   if (packetSize) {
@@ -94,7 +94,7 @@ void loop() {
   }
 }
 
-// ====== XỬ LÝ LỆNH MANUAL ======
+
 void handleCommand(char cmd) {
   switch (cmd) {
     case 'f': moveForward(MOTOR_SPEED); break;
@@ -106,12 +106,12 @@ void handleCommand(char cmd) {
   }
 }
 
-// ====== HÀM LINE FOLLOWER ======
+
 void followLine() {
-  bool left = digitalRead(IR_LEFT);        // Cảm biến trái
-  bool right = digitalRead(IR_RIGHT);     // Cảm biến phải
-  bool leftOuter = digitalRead(IR_LEFT_OUTER);   // Trái ngoài cùng
-  bool rightOuter = digitalRead(IR_RIGHT_OUTER); // Phải ngoài cùng
+  bool left = digitalRead(IR_LEFT);        
+  bool right = digitalRead(IR_RIGHT);     
+  bool leftOuter = digitalRead(IR_LEFT_OUTER);   
+  bool rightOuter = digitalRead(IR_RIGHT_OUTER);
 
   Serial.print("LEFT: ");
   Serial.print(left);
@@ -122,39 +122,39 @@ void followLine() {
   Serial.print(" | RIGHT_OUTER: ");
   Serial.println(rightOuter);
 
-  // Trường hợp tất cả cảm biến đều trên line đen
+
   if (left == LOW && right == LOW && leftOuter == LOW && rightOuter == LOW) {
     Serial.println("🛑 Tất cả cảm biến đều trên line - Dừng lại");
     stopMotors();
   } 
-  // Trường hợp tất cả cảm biến đều trên nền trắng
+
   else if (left == HIGH && right == HIGH && leftOuter == HIGH && rightOuter == HIGH) {
     Serial.println("⬆️ Tất cả cảm biến đều trắng - Đi thẳng");
     moveForward(110);
   } 
-  // Trường hợp cảm biến bên trái phát hiện line
+ 
   else if (left == LOW || leftOuter == LOW) {
     Serial.println("↩️ Một trong các cảm biến bên trái trên line - Rẽ trái");
     turnLeft(250);
     delay(30);
   } 
-  // Trường hợp cảm biến bên phải phát hiện line
+ 
   else if (right == LOW || rightOuter == LOW) {
     Serial.println("↪️ Một trong các cảm biến bên phải trên line - Rẽ phải");
     turnRight(250);
     delay(30);
   } 
-  // Nếu không rơi vào các trường hợp trên
+
   else {
     Serial.println("🛑 Mất line hoặc không xác định được hướng - Dừng lại");
     stopMotors();
   }
 
-  delay(10); // Thời gian chờ để tránh nhiễu
+  delay(10); 
 }
 
 
-// ====== HÀM ĐIỀU KHIỂN ĐỘNG CƠ ======
+
 void moveForward(int speed) {
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
